@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WiFi Cracker · Dimsz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <style>
+        /* ================================================================
+           ROOT — TEMA CYBER EMERALD
+           ================================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #06080f;
+            --bg-card: rgba(8, 16, 28, 0.78);
+            --cyan: #00e5ff;
+            --cyan-dim: rgba(0, 229, 255, 0.06);
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --emerald: #00ff87;
+            --emerald-dim: rgba(0, 255, 135, 0.06);
+            --gold: #ffd866;
+            --gold-dim: rgba(255, 216, 102, 0.08);
+            --text-white: #eef5ff;
+            --text-soft: rgba(255, 255, 255, 0.45);
+            --text-dim: rgba(255, 255, 255, 0.10);
+            --radius-xl: 28px;
+            --radius-md: 14px;
+            --transition: 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            --font-display: 'Orbitron', monospace;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            font-family: var(--font-body);
+            padding: 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ===== BACKGROUND GRID FUTURISTIK ===== */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(0, 229, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        /* ===== GLOW ORBS ===== */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            top: -20%;
+            right: -10%;
+            background: rgba(0, 229, 255, 0.04);
+            animation: orbFloat 14s infinite alternate;
+        }
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -20%;
+            left: -10%;
+            background: rgba(0, 255, 135, 0.03);
+            animation: orbFloat 18s infinite alternate-reverse;
+        }
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            top: 40%;
+            left: 50%;
+            background: rgba(255, 216, 102, 0.02);
+            animation: orbFloat 22s infinite alternate;
+        }
+
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(60px, -40px) scale(1.2);
+            }
+        }
+
+        /* ================================================================
+           APP CONTAINER
+           ================================================================ */
+        .app {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ================================================================
+           GLASS CARD — EDISI CYBER
+           ================================================================ */
+        .glass {
+            background: var(--bg-card);
+            backdrop-filter: blur(40px) saturate(1.5);
+            -webkit-backdrop-filter: blur(40px) saturate(1.5);
+            border: 1px solid rgba(0, 229, 255, 0.06);
+            border-radius: var(--radius-xl);
+            padding: 40px 32px;
+            box-shadow:
+                0 40px 120px rgba(0, 0, 0, 0.8),
+                0 0 60px rgba(0, 229, 255, 0.02),
+                inset 0 1px 0 rgba(0, 229, 255, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Border animasi berubah warna */
+        .glass::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-xl);
+            padding: 1.5px;
+            background: linear-gradient(135deg, var(--cyan), var(--emerald), var(--gold), var(--cyan));
+            background-size: 300% 300%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: borderShift 10s infinite alternate;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        @keyframes borderShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* ================================================================
+           PAGE SYSTEM
+           ================================================================ */
+        .page {
+            display: none;
+            animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            z-index: 2;
+        }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(35px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ================================================================
+           TYPOGRAPHY
+           ================================================================ */
+        .tag {
+            font-family: var(--font-display);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            opacity: 0.5;
+            margin-bottom: 6px;
+        }
+
+        .title-cyber {
+            font-family: var(--font-display);
+            font-size: 30px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: var(--text-white);
+            line-height: 1.05;
+        }
+
+        .title-cyber .grad-cyber {
+            background: linear-gradient(135deg, var(--cyan), var(--emerald), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradCyber 5s infinite alternate;
+        }
+
+        @keyframes gradCyber {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .sub-cyber {
+            font-size: 13px;
+            color: var(--text-soft);
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            margin-top: 4px;
+        }
+
+        .sub-cyber .hl {
+            color: var(--emerald);
+            font-weight: 500;
+            text-shadow: 0 0 30px rgba(0, 255, 135, 0.1);
+        }
+
+        /* ================================================================
+           INPUT — CYBER STYLE
+           ================================================================ */
+        .input-wrap {
+            margin-top: 28px;
+        }
+
+        .input-wrap label {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-soft);
+            margin-bottom: 6px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(0, 229, 255, 0.02);
+            border: 1px solid rgba(0, 229, 255, 0.06);
+            border-radius: var(--radius-md);
+            color: var(--text-white);
+            font-size: 15px;
+            font-weight: 400;
+            outline: none;
+            transition: var(--transition);
+            font-family: var(--font-body);
+        }
+
+        .input-field:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 4px var(--cyan-glow), inset 0 0 30px rgba(0, 229, 255, 0.02);
+            background: rgba(0, 229, 255, 0.04);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        /* ================================================================
+           BUTTON — CYBER NEON
+           ================================================================ */
+        .btn-cyber {
+            width: 100%;
+            padding: 17px;
+            background: linear-gradient(135deg, var(--cyan), #0099cc);
+            border: none;
+            border-radius: var(--radius-md);
+            color: #06080f;
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-cyber::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.15), transparent 60%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .btn-cyber:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 50px rgba(0, 229, 255, 0.25);
+        }
+
+        .btn-cyber:hover::after {
+            opacity: 1;
+        }
+
+        .btn-cyber:active {
+            transform: scale(0.96);
+        }
+
+        .btn-cyber:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-outline-cyber {
+            background: transparent;
+            border: 1px solid rgba(0, 229, 255, 0.08);
+            color: var(--text-soft);
+            padding: 13px 36px;
+            border-radius: 60px;
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-outline-cyber:hover {
+            background: rgba(0, 229, 255, 0.04);
+            border-color: rgba(0, 229, 255, 0.15);
+            color: var(--text-white);
+        }
+
+        /* ================================================================
+           LOGIN ERROR
+           ================================================================ */
+        .error-cyber {
+            color: #ff4466;
+            font-family: var(--font-display);
+            font-size: 11px;
+            text-align: center;
+            margin-top: 14px;
+            opacity: 0;
+            transition: var(--transition);
+            letter-spacing: 0.04em;
+        }
+        .error-cyber.show {
+            opacity: 1;
+        }
+
+        /* ================================================================
+           SPONSOR — CARD TIKTOK & INSTAGRAM
+           ================================================================ */
+        .sponsor-cyber {
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        .sponsor-cyber .divider-cyber {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 9px;
+            color: var(--text-dim);
+            letter-spacing: 0.3em;
+            font-family: var(--font-display);
+            margin-bottom: 18px;
+        }
+
+        .sponsor-cyber .divider-cyber span {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.10), transparent);
+        }
+
+        .sponsor-cyber .badge-cyber {
+            display: inline-block;
+            background: rgba(0, 229, 255, 0.04);
+            border: 1px solid rgba(0, 229, 255, 0.06);
+            border-radius: 60px;
+            padding: 3px 18px;
+            font-family: var(--font-display);
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--cyan);
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .sponsor-cyber .name-cyber {
+            font-family: var(--font-display);
+            font-size: 44px;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            color: var(--text-white);
+        }
+
+        .sponsor-cyber .name-cyber .glow-cyber {
+            background: linear-gradient(135deg, var(--cyan), var(--emerald), var(--gold));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradCyber 6s infinite alternate;
+        }
+
+        .sponsor-cyber .tagline-cyber {
+            font-size: 13px;
+            color: var(--text-soft);
+            font-weight: 300;
+            margin-top: 6px;
+            letter-spacing: 0.04em;
+        }
+
+        .sponsor-cyber .tagline-cyber em {
+            font-style: normal;
+            color: var(--emerald);
+            font-weight: 400;
+        }
+
+        /* SOCIAL CARD — HANYA TIKTOK & INSTAGRAM */
+        .social-cyber {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin: 26px 0 30px;
+        }
+
+        .social-cyber a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--text-soft);
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.01);
+            flex: 1;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-cyber a .ico {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        /* TikTok card */
+        .social-cyber a.tiktok-card {
+            border-color: rgba(255, 95, 160, 0.08);
+        }
+        .social-cyber a.tiktok-card:hover {
+            background: rgba(255, 95, 160, 0.06);
+            border-color: #ff5fa0;
+            color: #fff;
+            box-shadow: 0 0 50px rgba(255, 95, 160, 0.06);
+            transform: translateY(-2px);
+        }
+
+        /* Instagram card */
+        .social-cyber a.instagram-card {
+            border-color: rgba(184, 106, 255, 0.08);
+        }
+        .social-cyber a.instagram-card:hover {
+            background: rgba(184, 106, 255, 0.06);
+            border-color: #b86aff;
+            color: #fff;
+            box-shadow: 0 0 50px rgba(184, 106, 255, 0.06);
+            transform: translateY(-2px);
+        }
+
+        /* ================================================================
+           RESULT — DENGAN TERMINAL SCANNING
+           ================================================================ */
+        .result-cyber {
+            margin-top: 22px;
+            padding: 16px 22px;
+            background: rgba(0, 229, 255, 0.02);
+            border: 1px solid rgba(0, 229, 255, 0.04);
+            border-radius: var(--radius-md);
+            min-height: 66px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            font-size: 14px;
+            color: var(--text-white);
+            position: relative;
+            font-family: var(--font-body);
+        }
+
+        .result-cyber .label {
+            color: var(--text-soft);
+            font-weight: 400;
+            margin-right: 12px;
+            font-size: 12px;
+            font-family: var(--font-display);
+            letter-spacing: 0.04em;
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+
+        .result-cyber .value {
+            color: var(--gold);
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            font-family: var(--font-display);
+            text-shadow: 0 0 40px rgba(255, 216, 102, 0.06);
+        }
+
+        .result-cyber .empty {
+            color: var(--text-dim);
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        /* ---- TERMINAL SCANNING ---- */
+        .terminal-scan {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            font-family: var(--font-display);
+        }
+
+        .terminal-scan .scan-prompt {
+            color: var(--emerald);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            animation: blinkPulse 1.2s infinite alternate;
+        }
+
+        @keyframes blinkPulse {
+            0% {
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .terminal-scan .scan-line {
+            flex: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .terminal-scan .scan-line .fill-cyber {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cyan), var(--emerald), var(--gold));
+            border-radius: 10px;
+            animation: scanCyber 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes scanCyber {
+            0% {
+                width: 0%;
+            }
+            25% {
+                width: 20%;
+            }
+            55% {
+                width: 55%;
+            }
+            80% {
+                width: 85%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .terminal-scan .scan-cursor {
+            display: flex;
+            gap: 4px;
+        }
+
+        .terminal-scan .scan-cursor span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: cursorBlink 1.2s infinite alternate;
+        }
+
+        .terminal-scan .scan-cursor span:nth-child(2) {
+            animation-delay: 0.3s;
+            background: var(--emerald);
+        }
+        .terminal-scan .scan-cursor span:nth-child(3) {
+            animation-delay: 0.6s;
+            background: var(--gold);
+        }
+
+        @keyframes cursorBlink {
+            0% {
+                opacity: 0.1;
+                transform: scale(0.6);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Glitch effect pada teks saat scanning */
+        .glitch-text {
+            animation: glitch 0.8s infinite alternate;
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow: 2px 0 var(--cyan), -2px 0 var(--emerald);
+            }
+            25% {
+                text-shadow: -2px 0 var(--cyan), 2px 0 var(--emerald);
+            }
+            50% {
+                text-shadow: 3px 0 var(--gold), -1px 0 var(--cyan);
+            }
+            75% {
+                text-shadow: -3px 0 var(--gold), 1px 0 var(--emerald);
+            }
+            100% {
+                text-shadow: 1px 0 var(--cyan), -3px 0 var(--gold);
+            }
+        }
+
+        /* ================================================================
+           FOOTER
+           ================================================================ */
+        .footer-cyber {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 229, 255, 0.03);
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 9px;
+            color: var(--text-dim);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .footer-cyber strong {
+            color: rgba(255, 255, 255, 0.08);
+            font-weight: 600;
+        }
+
+        .footer-cyber .sep {
+            color: var(--cyan);
+            opacity: 0.15;
+            margin: 0 6px;
+        }
+
+        /* ================================================================
+           RESPONSIVE
+           ================================================================ */
+        @media (max-width: 480px) {
+            .glass {
+                padding: 28px 18px;
+                border-radius: 24px;
+            }
+            .title-cyber {
+                font-size: 24px;
+            }
+            .sponsor-cyber .name-cyber {
+                font-size: 34px;
+            }
+            .social-cyber a {
+                padding: 12px 16px;
+                font-size: 10px;
+                gap: 6px;
+            }
+            .social-cyber a .ico {
+                font-size: 16px;
+            }
+            .btn-cyber {
+                font-size: 11px;
+                padding: 15px;
+            }
+            .result-cyber {
+                padding: 14px 16px;
+                font-size: 13px;
+                min-height: 58px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .social-cyber {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .social-cyber a {
+                width: 100%;
+            }
+            .glass {
+                padding: 20px 14px;
+                border-radius: 20px;
+            }
+            .title-cyber {
+                font-size: 20px;
+            }
+            .sponsor-cyber .name-cyber {
+                font-size: 28px;
+            }
+            .terminal-scan {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .terminal-scan .scan-line {
+                flex-basis: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== BACKGROUND ===== -->
+    <div class="grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- ===== APP ===== -->
+    <div class="app" id="app">
+
+        <div class="glass">
+
+            <!-- ====== PAGE 1 : LOGIN ====== -->
+            <div class="page active" id="pageLogin">
+                <div class="tag">⚡ Secure Access</div>
+                <div class="title-cyber">🔐 <span class="grad-cyber">WiFi</span> Cracker</div>
+                <div class="sub-cyber">Akses terbatas · <span class="hl">private </span></div>
+
+                <div class="input-wrap">
+                    <div class="input-group">
+                        <label>Username</label>
+                        <input class="input-field" type="text" id="loginUser" placeholder="Masukkan username" />
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input class="input-field" type="password" id="loginPass" placeholder="Masukkan password" />
+                    </div>
+                </div>
+
+                <button class="btn-cyber" id="loginBtn">⟡ Masuk ke Terminal</button>
+                <div class="error-cyber" id="loginError">⚠️ Akses ditolak — username atau password salah</div>
+            </div>
+
+            <!-- ====== PAGE 2 : SPONSOR ====== -->
+            <div class="page" id="pageSponsor">
+                <div class="sponsor-cyber">
+                    <div class="divider-cyber"><span></span> ✦ <span></span></div>
+                    <div class="badge-cyber">⭐ Exclusive Sponsor</div>
+
+                    <div class="name-cyber">
+                        <span class="glow-cyber">Dimsz</span>
+                    </div>
+                    <div class="tagline-cyber">
+                        Sang Pencipta · <em>Tanpa Batasan</em> · Tahun 3480
+                    </div>
+
+                    <!-- HANYA TIKTOK & INSTAGRAM — CARD STYLE -->
+                    <div class="social-cyber">
+                        <a href="#" target="_blank" class="tiktok-card">
+                            <span class="ico">🎵</span> TikTok
+                        </a>
+                        <a href="#" target="_blank" class="instagram-card">
+                            <span class="ico">📸</span> Instagram
+                        </a>
+                    </div>
+
+                    <button class="btn-outline-cyber" id="skipSponsor">Lewati →</button>
+                </div>
+            </div>
+
+            <!-- ====== PAGE 3 : MAIN TOOL ====== -->
+            <div class="page" id="pageTool">
+                <div class="tag">📡 Scan Network</div>
+                <div class="title-cyber">📶 <span class="grad-cyber">Cari</span> Password</div>
+                <div class="sub-cyber">Masukkan SSID, <span class="hl">Sandi akan terbuka</span></div>
+
+                <div class="input-wrap">
+                    <div class="input-group">
+                        <label>Nama WiFi (SSID)</label>
+                        <input class="input-field" type="text" id="wifiInput" placeholder="Contoh: WiFi_Kantor" />
+                    </div>
+                </div>
+
+                <button class="btn-cyber" id="revealBtn">🔍 Scan & Reveal</button>
+
+                <div class="result-cyber" id="resultBox">
+                    <span class="label">PASSWORD</span>
+                    <span class="empty">— masukkan SSID di atas —</span>
+                </div>
+
+                <div class="footer-cyber">
+                    <strong>LOXASAI</strong> <span class="sep">•</span> created by Dimsz <span class="sep">•</span> no limits
+                </div>
+            </div>
+
+        </div>
+        <!-- end glass -->
+
+    </div>
+    <!-- end app -->
+
+    <script>
+        // ================================================================
+        //  KONFIGURASI LOGIN
+        // ================================================================
+        const VALID_USER = "Dimsz";
+        const VALID_PASS = "DimszGanteng";
+
+        // ================================================================
+        //  DATABASE WIFI — BARU SESUAI PERMINTAAN
+        //  Key: yang diketik user → Value: password yang ditemukan
+        // ================================================================
+        const wifiDB = {
+            // === GRUP 1 ===
+            "insyaallah": "Bella1212",
+            "insya allah": "Bella1212",
+
+            // === GRUP 2 ===
+            "jojo 210315": "Rum4hK3r3n",
+            "jojo210315": "Rum4hK3r3n",
+
+            // === GRUP 3 ===
+            "rayski": "Tolol lu",
+            "rayski ": "Tolol lu",
+
+            // === GRUP 4 ===
+            "bukan wifi": "kamu nanya",
+            "bukanwifi": "kamu nanya",
+
+            // === GRUP 5 ===
+            "buraksiluman 4g": "just frends kok manggil sayang?",
+            "buraksiluman4g": "just frends kok manggil sayang?",
+
+            // === GRUP 6 ===
+            "buraksiluman 5g": "modal dong",
+            "buraksiluman5g": "modal dong",
+
+            // === GRUP 7 ===
+            "izul ganteng 4g": "Mang eak",
+            "izulganteng4g": "Mang eak",
+
+            // === GRUP 8 ===
+            "rumah damai": "tolol lu beli paket makanya",
+            "rumahdamai": "tolol lu beli paket makanya",
+
+            // === GRUP 9 ===
+            "cristy": "beli makanya",
+            "cristy ": "beli makanya"
+        };
+
+        // ================================================================
+        //  DOM
+        // ================================================================
+        const pageLogin = document.getElementById('pageLogin');
+        const pageSponsor = document.getElementById('pageSponsor');
+        const pageTool = document.getElementById('pageTool');
+
+        const loginUser = document.getElementById('loginUser');
+        const loginPass = document.getElementById('loginPass');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+
+        const skipSponsor = document.getElementById('skipSponsor');
+
+        const wifiInput = document.getElementById('wifiInput');
+        const revealBtn = document.getElementById('revealBtn');
+        const resultBox = document.getElementById('resultBox');
+
+        function goTo(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // ===== LOGIN =====
+        loginBtn.addEventListener('click', function() {
+            const u = loginUser.value.trim();
+            const p = loginPass.value.trim();
+
+            if (u === VALID_USER && p === VALID_PASS) {
+                loginError.classList.remove('show');
+                goTo('pageSponsor');
+            } else {
+                loginError.classList.add('show');
+                loginUser.value = '';
+                loginPass.value = '';
+                loginUser.focus();
+            }
+        });
+
+        loginPass.addEventListener('keydown', e => { if (e.key === 'Enter') loginBtn.click(); });
+        loginUser.addEventListener('keydown', e => { if (e.key === 'Enter') loginBtn.click(); });
+
+        // ===== SKIP SPONSOR =====
+        skipSponsor.addEventListener('click', function() {
+            goTo('pageTool');
+            wifiInput.focus();
+        });
+
+        // ================================================================
+        //  REVEAL — DENGAN NORMALISASI CASE & SPASI
+        // ================================================================
+        revealBtn.addEventListener('click', function() {
+            // Ambil input, trim spasi di depan/belakang, ubah ke huruf kecil
+            const rawInput = wifiInput.value.trim();
+            const ssid = rawInput.toLowerCase();
+
+            if (ssid === '') {
+                resultBox.innerHTML = `
+                    <span class="label">PASSWORD</span>
+                    <span style="color:#ff4466;font-weight:400;font-family:'Orbitron',monospace;font-size:12px;">⚠️ isi SSID</span>
+                `;
+                return;
+            }
+
+            revealBtn.disabled = true;
+            revealBtn.textContent = '⏳ Scanning...';
+
+            // Tampilkan terminal scanning dengan glitch
+            resultBox.innerHTML = `
+                <div class="terminal-scan">
+                    <span class="scan-prompt glitch-text">>_ scanning</span>
+                    <div class="scan-line">
+                        <div class="fill-cyber"></div>
+                    </div>
+                    <div class="scan-cursor">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            `;
+
+            setTimeout(() => {
+                // Cari di database — case insensitive sudah otomatis karena ssid sudah lowerCase
+                const found = wifiDB[ssid];
+
+                if (found) {
+                    resultBox.innerHTML = `
+                        <span class="label">PASSWORD</span>
+                        <span class="value">${found}</span>
+                    `;
+                } else {
+                    resultBox.innerHTML = `
+                        <span class="label">PASSWORD</span>
+                        <span style="color:var(--text-dim);font-weight:300;font-family:'Inter',sans-serif;">tidak ditemukan · coba nama wifi yang lain pea</span>
+                    `;
+                }
+
+                revealBtn.disabled = false;
+                revealBtn.textContent = '🔍 Scan & Reveal';
+
+            }, 2800);
+        });
+
+        wifiInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') revealBtn.click();
+        });
+
+        loginUser.focus();
+    </script>
+
+</body>
+</html>
